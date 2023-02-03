@@ -20,7 +20,7 @@ import Smile from "../../assets/images/smile.svg";
 import { useAddPost } from "../../hooks/posts";
 import { getRandomInt } from "../../utils/getRandomInt";
 
-const NewPost = ({ user, authLoading }) => {
+const NewPost = ({ user }) => {
   const { register, handleSubmit, reset } = useForm();
   const { addPost, isLoading } = useAddPost();
   const images = [BigSmile, Joy, Smile, Cry, Raised];
@@ -32,7 +32,7 @@ const NewPost = ({ user, authLoading }) => {
 
   function handleAddPost(data) {
     addPost({
-      uid: user?.id,
+      uid: user?.uid,
       postText: data.postText,
     });
     reset();
@@ -51,10 +51,10 @@ const NewPost = ({ user, authLoading }) => {
         <HStack gap="6">
           <Avatar
             as={Link}
-            to={`/protected/profile/${user?.id}`}
-            name={user?.username}
+            to={`/protected/profile/${user?.uid}`}
+            name={user?.displayName}
             size="md"
-            src={user?.avatar}
+            src={user?.photoURL}
             _hover={{ cursor: "pointer" }}
           />
           <Input
@@ -78,7 +78,7 @@ const NewPost = ({ user, authLoading }) => {
             w="32"
             colorScheme="facebook"
             bgColor="facebook.500"
-            isLoading={authLoading || isLoading}
+            isLoading={isLoading}
             _loading={{ opacity: 0.8 }}
             loadingText="Posting"
             spinnerPlacement="start"

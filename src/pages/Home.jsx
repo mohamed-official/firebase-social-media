@@ -1,20 +1,17 @@
 import { Box } from "@chakra-ui/react";
 import NewPost from "../components/Home/NewPost";
 import Posts from "../components/Home/Posts";
-import LoadingSpinner from "../components/Loading";
-import { useAuth } from "../hooks/auth";
+import { useStateValue } from "../context/StateProvider";
 import { usePosts } from "../hooks/posts";
 
 const Home = () => {
-  const { user, authLoading } = useAuth();
-  const { posts, isLoading: postsLoading } = usePosts();
-
-  if (postsLoading) return <LoadingSpinner />;
+  const [{ user }] = useStateValue();
+  const { posts, isLoading } = usePosts();
 
   return (
     <Box align="center" mt="6">
-      <NewPost user={user} authLoading={authLoading} />
-      <Posts posts={posts} />
+      <NewPost user={user} />
+      <Posts posts={posts} isLoading={isLoading} />
     </Box>
   );
 };

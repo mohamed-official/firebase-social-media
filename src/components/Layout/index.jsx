@@ -1,23 +1,20 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/auth";
-import LargeLoadingSpinner from "../Loading/Large";
+import { useStateValue } from "../../context/StateProvider";
 import Navbar from "../Navbar";
 import Sidebar from "../Sidebar";
 
 const Layout = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { user, isLoading } = useAuth();
+  const [{ user }] = useStateValue();
 
   useEffect(() => {
-    if (!isLoading && pathname.startsWith("/protected") && !user) {
+    if (pathname.startsWith("/protected") && !user) {
       navigate("/");
     }
-  }, [pathname, user, isLoading]);
-
-  if (isLoading) return <LargeLoadingSpinner />;
+  }, [pathname, user]);
 
   return (
     <>

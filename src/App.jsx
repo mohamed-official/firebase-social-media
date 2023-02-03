@@ -5,6 +5,7 @@ import Layout from "./components/Layout";
 import Comments from "./pages/Comments";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import MyProfile from "./pages/MyProfile";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 
@@ -17,7 +18,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/protected" element={<Layout />}>
             <Route path="/protected/home" element={<Home />} />
-            <Route path="/protected/profile/:userId" element={<Profile />} />
+            <Route path="/protected/me" element={<MyProfile />} />
+            <Route path="/protected/profile/:id" element={<Profile />} />
             <Route path="/protected/comments/:postId" element={<Comments />} />
           </Route>
         </Routes>

@@ -1,30 +1,22 @@
 import { Avatar, Button, Stack, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../hooks/auth";
-import LoadingSpinner from "../Loading";
+import { useStateValue } from "../../context/StateProvider";
 
 const CurrentUser = () => {
-  const { user, isLoading } = useAuth();
-
-  if (isLoading) return <LoadingSpinner />;
+  const [{ user }] = useStateValue();
 
   return (
     <Stack align="center" spacing="5" my="8">
       <Avatar
         as={Link}
-        to={`/protected/profile/${user?.id}`}
-        name={user?.username}
+        to="/protected/me"
+        name={user?.displayName}
         size="lg"
-        src={user?.avatar}
+        src={user?.photoURL}
         _hover={{ cursor: "pointer", opacity: 0.8 }}
       />
-      <Text fontSize="xl">@{user?.username}</Text>
-      <Button
-        colorScheme="facebook"
-        w="full"
-        as={Link}
-        to={`/protected/profile/${user?.id}`}
-      >
+      <Text fontSize="xl">@{user?.displayName}</Text>
+      <Button colorScheme="facebook" w="full" as={Link} to="/protected/me">
         Profile
       </Button>
     </Stack>

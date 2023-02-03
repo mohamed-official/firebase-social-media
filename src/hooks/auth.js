@@ -2,47 +2,39 @@ import { useToast } from "@chakra-ui/react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { useAuthState, useSignOut } from "react-firebase-hooks/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { useState } from "react";
+import { useSignOut } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
+import { actionTypes } from "../context/reducer";
+import { useStateValue } from "../context/StateProvider";
 import { auth, db } from "../lib/firebase";
 import isUsernameExists from "../utils/isUsernameExists";
-
-export function useAuth() {
-  const [authUser, authLoading, error] = useAuthState(auth);
-  const [isLoading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      const ref = doc(db, "users", authUser.uid);
-      const docSnapshot = await getDoc(ref);
-      setUser(docSnapshot.data());
-      setLoading(false);
-    }
-
-    if (!authLoading) {
-      if (authUser) fetchData();
-      else setLoading(false);
-    }
-  }, [authLoading]);
-
-  return { user, isLoading, error };
-}
 
 export function useLogin() {
   const [isLoading, setLoading] = useState(false);
   const toast = useToast();
+  const [{ user }, dispatch] = useStateValue();
   const navigate = useNavigate();
 
   async function login({ email, password, redirectTo = "/protected/home" }) {
     setLoading(true);
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, email, password).then(
+        (userCredential) => {
+          // Save user to context
+          dispatch({
+            type: actionTypes.SET_USER,
+            user: userCredential.user,
+          });
+          localStorage.setItem("user", JSON.stringify(userCredential.user));
+          // Redirect to home page
+          navigate("/protected/home");
+        }
+      );
       toast({
         title: "Logged in successfully.",
         status: "success",
@@ -73,6 +65,7 @@ export function useRegister() {
   const [isLoading, setLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
+  const [{ user }, dispatch] = useStateValue();
 
   async function register({
     username,
@@ -96,14 +89,29 @@ export function useRegister() {
       return false;
     } else {
       try {
-        const res = await createUserWithEmailAndPassword(auth, email, password);
-
-        await setDoc(doc(db, "users", res.user.uid), {
-          id: res.user.uid,
-          username: username,
-          avatar: "",
-          createdAt: Date.now(),
-        });
+        await createUserWithEmailAndPassword(auth, email, password).then(
+          (userCredential) => {
+            // Update username
+            updateProfile(userCredential?.user, {
+              displayName: username,
+            });
+            // Create user doc in firestore
+            setDoc(doc(db, "users", userCredential.user.uid), {
+              id: userCredential.user.uid,
+              username: username,
+              avatar: "",
+              createdAt: Date.now(),
+            });
+            // Save user to context
+            dispatch({
+              type: actionTypes.SET_USER,
+              user: userCredential.user,
+            });
+            localStorage.setItem("user", JSON.stringify(userCredential.user));
+            // Redirect to home page
+            navigate("/protected/home");
+          }
+        );
 
         toast({
           title: "Account created successfully.",
@@ -114,7 +122,7 @@ export function useRegister() {
           duration: 5000,
         });
 
-        navigate(redirectTo);
+        // navigate(redirectTo);
       } catch (error) {
         toast({
           title: "Account create failed.",

@@ -1,14 +1,14 @@
 import { Avatar, Box, Button, Flex, Text } from "@chakra-ui/react";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../hooks/auth";
+import { useStateValue } from "../../context/StateProvider";
 import { useUser } from "../../hooks/users";
 import PostActions from "./PostActions";
 
 const SinglePost = ({ post }) => {
   const { id, uid, postText, createdAt, likes } = post;
   const { user, isLoading } = useUser(uid);
-  const { user: currentUser, isLoading: authLoading } = useAuth();
+  const [{ user: currentUser }] = useStateValue();
 
   if (isLoading) return;
 
@@ -55,13 +55,7 @@ const SinglePost = ({ post }) => {
           {postText}
         </Text>
       </Flex>
-      <PostActions
-        id={id}
-        uid={currentUser?.id}
-        postUid={uid}
-        likes={likes}
-        authLoading={authLoading}
-      />
+      <PostActions id={id} uid={currentUser?.uid} postUid={uid} likes={likes} />
     </Box>
   );
 };

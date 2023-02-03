@@ -2,17 +2,17 @@ import { Avatar, Box, Button, Flex, IconButton, Text } from "@chakra-ui/react";
 import { formatDistanceToNow } from "date-fns";
 import { FaTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../hooks/auth";
+import { useStateValue } from "../../context/StateProvider";
 import { useDeleteComment } from "../../hooks/comments";
 import { useUser } from "../../hooks/users";
 
 const SingleComment = ({ comment }) => {
   const { id, uid, comment: commentText, createdAt } = comment;
   const { user, isLoading } = useUser(uid);
-  const { user: currentUser, isLoading: authLoading } = useAuth();
+  const [{ user: currentUser }] = useStateValue();
   const { deleteComment, isLoading: deleteLoading } = useDeleteComment(id);
 
-  if (isLoading || authLoading) return;
+  if (isLoading) return;
 
   return (
     <Box
@@ -57,7 +57,7 @@ const SingleComment = ({ comment }) => {
         <Text wordBreak="break-word" fontSize="md">
           {commentText}
         </Text>
-        {uid === currentUser?.id && (
+        {uid === currentUser?.uid && (
           <IconButton
             size="md"
             ml="auto"
@@ -66,7 +66,7 @@ const SingleComment = ({ comment }) => {
             variant="ghost"
             icon={<FaTrashAlt size={25} />}
             onClick={deleteComment}
-            isLoading={authLoading || deleteLoading}
+            isLoading={deleteLoading}
           />
         )}
       </Flex>

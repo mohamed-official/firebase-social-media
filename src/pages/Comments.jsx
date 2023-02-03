@@ -4,20 +4,20 @@ import CommentsList from "../components/Comments";
 import NewComment from "../components/Comments/NewComment";
 import SinglePost from "../components/Home/SinglePost";
 import LoadingSpinner from "../components/Loading";
-import { useAuth } from "../hooks/auth";
+import { useStateValue } from "../context/StateProvider";
 
 import { usePost } from "../hooks/posts";
 const Comments = () => {
   const { postId } = useParams();
   const { post, isLoading } = usePost(postId);
-  const { user, isLoading: authLoading } = useAuth();
+  const [{ user }] = useStateValue();
 
   if (isLoading) return <LoadingSpinner />;
 
   return (
     <Box align="center" mt="6" mx="4">
       <SinglePost post={post} />
-      <NewComment user={user} isLoading={authLoading} postId={postId} />
+      <NewComment user={user} postId={postId} />
       <CommentsList id={postId} />
     </Box>
   );
