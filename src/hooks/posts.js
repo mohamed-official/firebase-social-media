@@ -88,7 +88,7 @@ export function useDeletePost(id) {
   async function deletePost() {
     setLoading(true);
     await deleteDoc(doc(db, "posts", id));
-    const q = query(collection(db, "comments"), where("postID", "==", id));
+    const q = query(collection(db, "comments"), where("postId", "==", id));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach(async (doc) => deleteDoc(doc.ref));
     toast({
