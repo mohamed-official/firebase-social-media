@@ -10,8 +10,10 @@ import {
   Link,
   Text,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useStateValue } from "../context/StateProvider";
 import { useRegister } from "../hooks/auth";
 import {
   emailValidate,
@@ -27,6 +29,12 @@ const Register = () => {
     reset,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
+  const [{ user }] = useStateValue();
+
+  useEffect(() => {
+    if (user) navigate("/protected/home");
+  }, [user]);
 
   async function handleRegister(data) {
     const succeeded = await singup({

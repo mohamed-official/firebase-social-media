@@ -147,6 +147,7 @@ export function useLogout() {
   const [signOut, isLoading, error] = useSignOut(auth);
   const toast = useToast();
   const navigate = useNavigate();
+  const [{ user }, dispatch] = useStateValue();
 
   async function logout() {
     if (await signOut()) {
@@ -156,6 +157,11 @@ export function useLogout() {
         isClosable: true,
         position: "top",
         duration: "5000",
+      });
+      localStorage.removeItem("user");
+      dispatch({
+        type: actionTypes.SET_USER,
+        user: null,
       });
       navigate("/");
     } else {
