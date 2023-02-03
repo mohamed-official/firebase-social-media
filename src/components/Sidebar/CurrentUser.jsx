@@ -1,4 +1,10 @@
-import { Avatar, Button, Stack, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  Stack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useStateValue } from "../../context/StateProvider";
 
@@ -16,7 +22,13 @@ const CurrentUser = () => {
         _hover={{ cursor: "pointer", opacity: 0.8 }}
       />
       <Text fontSize="xl">@{user?.displayName}</Text>
-      <Button colorScheme="facebook" w="full" as={Link} to="/protected/me">
+      <Button
+        colorScheme={useColorModeValue("facebook", "gray")}
+        _dark={{ bg: "gray.600", _hover: { bg: "gray.500" } }}
+        w="full"
+        as={Link}
+        to="/protected/me"
+      >
         Profile
       </Button>
     </Stack>

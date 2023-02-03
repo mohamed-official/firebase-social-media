@@ -1,4 +1,11 @@
-import { Avatar, Box, Button, HStack, Input } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Button,
+  HStack,
+  Input,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useAddComment } from "../../hooks/comments";
@@ -19,10 +26,10 @@ const NewComment = ({ user, postId }) => {
     <Box
       mx="4"
       maxW="600px"
-      bg="grayBackground.main"
+      bg={useColorModeValue("grayBackground.main", "gray.700")}
       rounded="xl"
       p="6"
-      boxShadow="0 0 2px 2px #efdfde"
+      _light={{ boxShadow: "0 2px 7px 2px #979797" }}
     >
       <form onSubmit={handleSubmit(handleAddComment)}>
         <HStack gap="6">
@@ -38,15 +45,16 @@ const NewComment = ({ user, postId }) => {
             rounded="lg"
             p="4"
             placeholder="What is your opinion?"
-            bg="white"
             autoComplete="off"
             {...register("comment", { required: true })}
+            bg={useColorModeValue("white", "chakra-body-bg")}
           />
           <Button
             type="submit"
             w="32"
             colorScheme="facebook"
-            bgColor="facebook.500"
+            color="white"
+            bgColor={useColorModeValue("facebook.500", "facebook.400")}
             isLoading={commentLoading}
             _loading={{ opacity: 0.8 }}
             spinnerPlacement="start"

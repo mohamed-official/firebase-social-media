@@ -1,8 +1,16 @@
-import { Avatar, Box, Button, Flex, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
 import { useStateValue } from "../../context/StateProvider";
 import { useUser } from "../../hooks/users";
+import LoadingSpinner from "../Loading";
 import PostActions from "./PostActions";
 
 const SinglePost = ({ post }) => {
@@ -10,14 +18,14 @@ const SinglePost = ({ post }) => {
   const { user, isLoading } = useUser(uid);
   const [{ user: currentUser }] = useStateValue();
 
-  if (isLoading) return;
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <Box
       p="2"
       maxW="600px"
       textAlign="left"
-      bg="facebook.500"
+      bg={useColorModeValue("facebook.500", "gray.700")}
       color="white"
       mb="10"
       rounded="lg"
@@ -25,7 +33,7 @@ const SinglePost = ({ post }) => {
       <Flex
         alignItems="center"
         borderBottom="2px solid"
-        borderBottomColor="facebook.100"
+        borderBottomColor={useColorModeValue("facebook.100", "gray.500")}
         p="3"
       >
         <Avatar

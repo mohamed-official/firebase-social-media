@@ -9,6 +9,7 @@ import {
   Input,
   Link,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -97,7 +98,8 @@ const Register = () => {
             mt="4"
             type="submit"
             colorScheme="facebook"
-            bg="facebook.700"
+            color="white"
+            bgColor={useColorModeValue("facebook.500", "facebook.400")}
             size="md"
             w="full"
             isLoading={isLoading}
@@ -113,10 +115,10 @@ const Register = () => {
           <Link
             as={RouterLink}
             to="/"
-            color="facebook.600"
+            color={useColorModeValue("facebook.600", "facebook.300")}
             fontWeight="medium"
             textDecor="underline"
-            _hover={{ color: "facebook.500", bg: "facebook.100" }}
+            _hover={{ color: "facebook.500", light: { bg: "facebook.100" } }}
           >
             Login
           </Link>

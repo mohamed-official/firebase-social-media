@@ -7,6 +7,7 @@ import {
   Image,
   Input,
   Tooltip,
+  useColorModeValue,
   WrapItem,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -42,10 +43,10 @@ const NewPost = ({ user }) => {
     <Box
       mx="4"
       maxW="600px"
-      bg="grayBackground.main"
+      bg={useColorModeValue("grayBackground.main", "gray.700")}
       rounded="xl"
       p="6"
-      boxShadow="0 0 2px 2px #efdfde"
+      _light={{ boxShadow: "0 2px 7px 2px #979797" }}
     >
       <form onSubmit={handleSubmit(handleAddPost)}>
         <HStack gap="6">
@@ -60,7 +61,7 @@ const NewPost = ({ user }) => {
           <Input
             rounded="lg"
             placeholder="What are you thinking about?"
-            bg="white"
+            bg={useColorModeValue("white", "chakra-body-bg")}
             {...register("postText", { required: true })}
           />
         </HStack>
@@ -77,7 +78,8 @@ const NewPost = ({ user }) => {
             type="submit"
             w="32"
             colorScheme="facebook"
-            bgColor="facebook.500"
+            color="white"
+            bgColor={useColorModeValue("facebook.500", "facebook.400")}
             isLoading={isLoading}
             _loading={{ opacity: 0.8 }}
             loadingText="Posting"

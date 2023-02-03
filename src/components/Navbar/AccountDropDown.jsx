@@ -6,8 +6,11 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  useColorMode,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { BiLogOut } from "react-icons/bi";
+import { BsFillSunFill, BsMoonFill } from "react-icons/bs";
 import { FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useStateValue } from "../../context/StateProvider";
@@ -16,9 +19,25 @@ import { useLogout } from "../../hooks/auth";
 const AccountDropDown = () => {
   const [{ user }] = useStateValue();
   const { logout, isLoading } = useLogout();
+  const { colorMode, toggleColorMode } = useColorMode();
 
   return (
     <Box>
+      <Button
+        onClick={toggleColorMode}
+        mr="8"
+        variant="ghost"
+        _light={{
+          color: "white",
+          _hover: { bgColor: "gray.500" },
+        }}
+      >
+        {colorMode === "light" ? (
+          <BsMoonFill size={20} />
+        ) : (
+          <BsFillSunFill size={20} />
+        )}
+      </Button>
       <Menu>
         <MenuButton>
           <Avatar
@@ -28,13 +47,19 @@ const AccountDropDown = () => {
             _hover={{ cursor: "pointer", opacity: 0.8 }}
           />
         </MenuButton>
-        <MenuList border="1px solid" borderColor="facebook.200">
+        <MenuList
+          border="1px solid"
+          borderColor={useColorModeValue("facebook.200", "gray.600")}
+        >
           <MenuItem
             as={Link}
             to="/protected/me"
             icon={<FaUserCircle size={20} />}
-            color="facebook.700"
-            _hover={{ bg: "facebook.600", color: "white" }}
+            color={useColorModeValue("facebook.700", "gray.300")}
+            _hover={{
+              bg: useColorModeValue("facebook.600", "gray.600"),
+              color: "white",
+            }}
             transition="all"
             transitionDuration=".1s"
           >

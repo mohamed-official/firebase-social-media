@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import { BiHomeAlt } from "react-icons/bi";
 import { FaUsers } from "react-icons/fa";
 import { MdOutlineNotificationsNone } from "react-icons/md";
@@ -10,6 +10,7 @@ const Navbar = () => {
   return (
     <Box
       bgColor="facebook.500"
+      bg={useColorModeValue("facebook.500", "gray.700")}
       pos="fixed"
       w="full"
       zIndex="3"
@@ -42,7 +43,10 @@ const Navbar = () => {
             FakeBook
           </Text>
         </Box>
-        <Box display="flex" gap={{ base: "0", lg: "10" }}>
+        <Box
+          display={{ base: "none", sm: "flex" }}
+          gap={{ base: "0", lg: "10" }}
+        >
           <NavIcon Icon={BiHomeAlt} />
           <NavIcon Icon={FaUsers} />
           <NavIcon Icon={MdOutlineNotificationsNone} />

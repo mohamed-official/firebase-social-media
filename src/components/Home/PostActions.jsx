@@ -1,11 +1,11 @@
-import { Box, Flex, IconButton } from "@chakra-ui/react";
+import { Box, Flex, IconButton, useColorModeValue } from "@chakra-ui/react";
 import { BiCommentDetail } from "react-icons/bi";
 import { FaHeart, FaRegHeart, FaTrashAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useComments } from "../../hooks/comments";
 import { useDeletePost, useLikePost } from "../../hooks/posts";
 
-const PostActions = ({ id, uid, postUid, likes, authLoading }) => {
+const PostActions = ({ id, uid, postUid, likes }) => {
   const navigate = useNavigate();
   const isLiked = likes.includes(uid);
   const { likePost, isLoading } = useLikePost({
@@ -27,9 +27,10 @@ const PostActions = ({ id, uid, postUid, likes, authLoading }) => {
         <Flex alignItems="center" gap="2">
           <IconButton
             onClick={likePost}
-            isLoading={isLoading || authLoading}
+            isLoading={isLoading}
             size="md"
-            colorScheme="red"
+            colorScheme={useColorModeValue("red", "white")}
+            _dark={{ color: "red.600" }}
             variant="ghost"
             icon={isLiked ? <FaHeart size={25} /> : <FaRegHeart size={25} />}
           />
@@ -39,7 +40,7 @@ const PostActions = ({ id, uid, postUid, likes, authLoading }) => {
           <IconButton
             as={Link}
             to={`/protected/comments/${id}`}
-            isLoading={commentLoading || authLoading}
+            isLoading={commentLoading}
             size="md"
             color="white"
             _hover={{ color: "black", bg: "white" }}
@@ -55,12 +56,12 @@ const PostActions = ({ id, uid, postUid, likes, authLoading }) => {
             <IconButton
               size="md"
               ml="auto"
-              color="white"
+              color={useColorModeValue("white", "red.500")}
               _hover={{ color: "red", bg: "white" }}
               variant="ghost"
               icon={<FaTrashAlt size={25} />}
               onClick={handleDeletePost}
-              isLoading={authLoading || deleteLoading}
+              isLoading={deleteLoading}
             />
           </Flex>
         </Box>
