@@ -18,11 +18,14 @@ import {
   useDocumentData,
 } from "react-firebase-hooks/firestore";
 import { v4 as uuidv4 } from "uuid";
+import { actionTypes } from "../context/reducer";
+import { useStateValue } from "../context/StateProvider";
 import { db } from "../lib/firebase";
 
 export function useAddPost() {
   const [isLoading, setLoading] = useState(false);
   const toast = useToast();
+  const [{ posts }, dispatch] = useStateValue();
 
   async function addPost(post) {
     setLoading(true);
@@ -32,6 +35,19 @@ export function useAddPost() {
       id,
       createdAt: Date.now(),
       likes: [],
+    }).then(() => {
+      dispatch({
+        type: actionTypes.SET_POSTS,
+        posts: [
+          {
+            ...post,
+            id,
+            createdAt: Date.now(),
+            likes: [],
+          },
+          ...posts,
+        ],
+      });
     });
     toast({
       title: "Post added successfully.",
@@ -61,12 +77,37 @@ export function usePosts(uid = null) {
 
 export function useLikePost({ id, isLiked, uid }) {
   const [isLoading, setLoading] = useState(false);
+  const [{ posts }, dispatch] = useStateValue();
 
   async function likePost() {
     setLoading(true);
     const docRef = doc(db, "posts", id);
     updateDoc(docRef, {
       likes: isLiked ? arrayRemove(uid) : arrayUnion(uid),
+    }).then(() => {
+      const newPosts = posts.map((post) => {
+        if (post.id === id) {
+          let updatedPost;
+          if (
+            isLiked) {
+            updatedPost = {
+              ...post,
+              likes: [...post.likes].filter((id) => id !== uid),
+            };
+          } else {
+            updatedPost = {
+              ...post,
+              likes: [...post.likes, uid],
+            };
+          }
+          return updatedPost;
+        }
+        return post;
+      });
+      dispatch({
+        type: actionTypes.SET_POSTS,
+        posts: newPosts,
+      });
     });
     setLoading(false);
   }

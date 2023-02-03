@@ -1,14 +1,7 @@
 import { Box, Text } from "@chakra-ui/react";
-import LoadingSpinner from "../Loading";
 import SinglePost from "./SinglePost";
 
-const Posts = ({ posts, isLoading }) => {
-  if (isLoading)
-    return (
-      <Box mt="10">
-        <LoadingSpinner />
-      </Box>
-    );
+const Posts = ({ posts }) => {
   return (
     <Box px="4" mt="10">
       {posts?.length === 0 ? (
