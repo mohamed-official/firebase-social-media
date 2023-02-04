@@ -158,7 +158,7 @@ export function useLogout() {
         position: "top",
         duration: "5000",
       });
-      localStorage.removeItem("user");
+      localStorage.clear();
       dispatch({
         type: actionTypes.SET_USER,
         user: null,

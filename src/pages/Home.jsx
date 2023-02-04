@@ -8,7 +8,7 @@ const Home = () => {
   const [{ posts }] = useStateValue();
 
   return (
-    <Box align="center" mt="6">
+    <Box flex="1" align="center">
       <NewPost user={user} />
       <Posts posts={posts} />
     </Box>

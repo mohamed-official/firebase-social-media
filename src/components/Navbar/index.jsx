@@ -10,7 +10,7 @@ const Navbar = () => {
   return (
     <Box
       bgColor="facebook.500"
-      bg={useColorModeValue("facebook.500", "gray.700")}
+      bg={useColorModeValue("facebook.500", "chakra-body-bg")}
       pos="fixed"
       w="full"
       zIndex="3"

@@ -7,25 +7,30 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { formatDistanceToNow } from "date-fns";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useStateValue } from "../../context/StateProvider";
 import { useUser } from "../../hooks/users";
-import LoadingSpinner from "../Loading";
 import PostActions from "./PostActions";
 
 const SinglePost = ({ post }) => {
-  const { id, uid, postText, createdAt, likes } = post;
+  const { id, uid, postText, createdAt, likes, commentCount } = post;
   const { user, isLoading } = useUser(uid);
   const [{ user: currentUser }] = useStateValue();
 
-  if (isLoading) return <LoadingSpinner />;
+  useEffect(() => {
+    function loading() {
+      if (isLoading) return <LoadingSpinner />;
+      loading();
+    }
+  }, []);
 
   return (
     <Box
       p="2"
-      maxW="600px"
+      maxW={{ base: "600px", lg: "700px" }}
       textAlign="left"
-      bg={useColorModeValue("facebook.500", "gray.700")}
+      bg={useColorModeValue("facebook.500", "chakra-body-bg")}
       color="white"
       mb="10"
       rounded="lg"
@@ -63,7 +68,13 @@ const SinglePost = ({ post }) => {
           {postText}
         </Text>
       </Flex>
-      <PostActions id={id} uid={currentUser?.uid} postUid={uid} likes={likes} />
+      <PostActions
+        id={id}
+        uid={currentUser?.uid}
+        postUid={uid}
+        likes={likes}
+        commentCount={commentCount}
+      />
     </Box>
   );
 };

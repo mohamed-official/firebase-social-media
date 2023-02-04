@@ -42,8 +42,8 @@ const NewPost = ({ user }) => {
   return (
     <Box
       mx="4"
-      maxW="600px"
-      bg={useColorModeValue("grayBackground.main", "gray.700")}
+      maxW={{ base: "600px", lg: "700px" }}
+      bg={useColorModeValue("grayBackground.main", "chakra-body-bg")}
       rounded="xl"
       p="6"
       _light={{ boxShadow: "0 2px 7px 2px #979797" }}
@@ -70,7 +70,7 @@ const NewPost = ({ user }) => {
           <Box cursor="pointer">
             <WrapItem>
               <Tooltip label="Emojis" hasArrow>
-                <Image w="12" src={images[currentImage]} />
+                <Image w="12" src={images[currentImage]} alt="Emojis" />
               </Tooltip>
             </WrapItem>
           </Box>

@@ -8,11 +8,13 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { formatDistanceToNow } from "date-fns";
+import { useEffect } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useStateValue } from "../../context/StateProvider";
 import { useDeleteComment } from "../../hooks/comments";
 import { useUser } from "../../hooks/users";
+import LoadingSpinner from "../Loading";
 
 const SingleComment = ({ comment }) => {
   const { id, uid, comment: commentText, createdAt } = comment;
@@ -20,7 +22,12 @@ const SingleComment = ({ comment }) => {
   const [{ user: currentUser }] = useStateValue();
   const { deleteComment, isLoading: deleteLoading } = useDeleteComment(id);
 
-  if (isLoading) return;
+  useEffect(() => {
+    function loading() {
+      if (isLoading) return <LoadingSpinner />;
+      loading();
+    }
+  }, []);
 
   return (
     <Box

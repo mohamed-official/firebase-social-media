@@ -1,14 +1,20 @@
-import { Box, Flex, IconButton, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  IconButton,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { BiCommentDetail } from "react-icons/bi";
 import { FaHeart, FaRegHeart, FaTrashAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useComments } from "../../hooks/comments";
 import { useDeletePost, useLikePost } from "../../hooks/posts";
 
-const PostActions = ({ id, uid, postUid, likes }) => {
+const PostActions = ({ id, uid, postUid, likes, commentCount }) => {
   const navigate = useNavigate();
   const isLiked = likes.includes(uid);
-  const { likePost, isLoading } = useLikePost({
+  const { likePost, isLoading: likeLoading } = useLikePost({
     id,
     isLiked,
     uid,
@@ -25,15 +31,17 @@ const PostActions = ({ id, uid, postUid, likes }) => {
     <Flex p="2" gap="4" justifyContent="space-between" alignItems="center">
       <Flex gap="6">
         <Flex alignItems="center" gap="2">
-          <IconButton
+          <Button
             onClick={likePost}
-            isLoading={isLoading}
+            isLoading={likeLoading}
+            spinnerPlacement="start"
             size="md"
             colorScheme={useColorModeValue("red", "white")}
             _dark={{ color: "red.600" }}
             variant="ghost"
-            icon={isLiked ? <FaHeart size={25} /> : <FaRegHeart size={25} />}
-          />
+          >
+            {isLiked ? <FaHeart size={25} /> : <FaRegHeart size={25} />}
+          </Button>
           {likes.length}
         </Flex>
         <Flex alignItems="center" gap="2">

@@ -5,6 +5,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getCountFromServer,
   getDocs,
   orderBy,
   query,
@@ -71,6 +72,19 @@ export function usePosts(uid = null) {
       )
     : query(collection(db, "posts"), orderBy("createdAt", "desc"));
   const [posts, isLoading, error] = useCollectionData(q);
+  // Get comments count
+  posts?.map(async (post) => {
+    const q = query(collection(db, "comments"), where("postId", "==", post.id));
+    const snapshot = await getCountFromServer(q);
+    // Add count to post object
+    const newPost = {
+      ...post,
+      commentsCount: snapshot.data().count,
+    };
+    return newPost;
+
+    return post;
+  });
   if (error) throw error;
   return { posts, isLoading };
 }
@@ -88,8 +102,7 @@ export function useLikePost({ id, isLiked, uid }) {
       const newPosts = posts.map((post) => {
         if (post.id === id) {
           let updatedPost;
-          if (
-            isLiked) {
+          if (isLiked) {
             updatedPost = {
               ...post,
               likes: [...post.likes].filter((id) => id !== uid),
@@ -108,8 +121,8 @@ export function useLikePost({ id, isLiked, uid }) {
         type: actionTypes.SET_POSTS,
         posts: newPosts,
       });
+      setLoading(false);
     });
-    setLoading(false);
   }
 
   return { likePost, isLoading };
@@ -125,6 +138,7 @@ export function usePost(postId) {
 export function useDeletePost(id) {
   const [isLoading, setLoading] = useState(false);
   const toast = useToast();
+  const [{ posts }, dispatch] = useStateValue();
 
   async function deletePost() {
     setLoading(true);
@@ -132,6 +146,10 @@ export function useDeletePost(id) {
     const q = query(collection(db, "comments"), where("postId", "==", id));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach(async (doc) => deleteDoc(doc.ref));
+    dispatch({
+      type: actionTypes.SET_POSTS,
+      posts: posts.filter((post) => post.id !== id),
+    });
     toast({
       title: "Post deleted successfully.",
       status: "success",

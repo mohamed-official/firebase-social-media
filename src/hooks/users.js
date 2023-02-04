@@ -6,5 +6,7 @@ export function useUser(id) {
   const q = query(doc(db, "users", id));
   const [user, isLoading, error] = useDocumentData(q);
 
+  if (error) throw error;
+
   return { user, isLoading };
 }

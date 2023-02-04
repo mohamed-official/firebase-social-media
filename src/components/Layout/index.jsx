@@ -1,8 +1,9 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useStateValue } from "../../context/StateProvider";
 import Navbar from "../Navbar";
+import Rightbar from "../Rightbar";
 import Sidebar from "../Sidebar";
 
 const Layout = () => {
@@ -19,10 +20,17 @@ const Layout = () => {
   return (
     <>
       <Navbar />
-      <Flex pt="16" pb="12" mx="auto" w="full" maxW="1200px">
-        <Box w={{ base: "100%", md: "70%" }}>
-          <Outlet />
-        </Box>
+      <Flex
+        justify="space-between"
+        pt="24"
+        pb="12"
+        px="4"
+        mx="auto"
+        w="full"
+        maxW="1200px"
+      >
+        <Rightbar />
+        <Outlet />
         <Sidebar />
       </Flex>
     </>

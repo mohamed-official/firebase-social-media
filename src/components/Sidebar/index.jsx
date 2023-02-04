@@ -1,26 +1,36 @@
-import { Box, Text } from "@chakra-ui/react";
-import CurrentUser from "./CurrentUser";
+import { Avatar, Box, Divider, Flex, Text } from "@chakra-ui/react";
+import { memo } from "react";
+import { stories } from "../../data/stories";
 
 const Sidebar = () => {
   return (
-    <Box
-      px="6"
-      h="100vh"
-      w="30%"
-      borderLeft="1px solid"
-      borderLeftColor="facebook.200"
-      pos="sticky"
-      top="16"
-      display={{ base: "none", md: "block" }}
-    >
-      <CurrentUser />
-      <Box align="center">
-        <Box as="ul" borderTop="2px solid" borderTopColor="facebook.300">
-          <Text fontSize="2xl">Online Users</Text>
-        </Box>
+    <Box h="100vh" pos="sticky" display={{ base: "none", md: "block" }}>
+      {/* <CurrentUser />
+      <OnlineUsers /> */}
+      <Box p="4" w="64" bg="chakra-body-bg" rounded="lg">
+        <Text>Stories</Text>
+        <Divider my="3" />
+        {stories.map((story) => (
+          <div key={Math.random()}>
+            <Flex alignItems="center" gap="8">
+              <Avatar
+                size="md"
+                src={story.image}
+                _hover={{ cursor: "pointer", opacity: 0.8 }}
+              />
+              <Flex direction="column" gap={1}>
+                <Text fontSize="lg">{story.username}</Text>
+                <Text fontSize="sm" color="gray.500">
+                  {story.time}
+                </Text>
+              </Flex>
+            </Flex>
+            <Divider my="3" />
+          </div>
+        ))}
       </Box>
     </Box>
   );
 };
 
-export default Sidebar;
+export default memo(Sidebar);
