@@ -16,7 +16,7 @@
 
 ### Todo:
 
-- [ ] Follows
+- [x] Follows
 - [ ] Firebase auth security rules
 - [ ] Use a library like "react-query" to optimize and reduce reads with cache (e.g. changing pages causes all avatar images to refresh)
 - [ ] Auth optimization: Store user to localStorage to reduce auth user loading time

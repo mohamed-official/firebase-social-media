@@ -8,7 +8,7 @@ import { usePosts } from "./hooks/posts";
 import Router from "./Routes";
 
 function App() {
-  const [{}, dispatch] = useStateValue();
+  const [{ user }, dispatch] = useStateValue();
   const { posts, isLoading } = usePosts();
 
   const getPosts = () => {
@@ -20,12 +20,12 @@ function App() {
 
   useEffect(() => {
     getPosts();
-  }, [isLoading]);
+  }, [isLoading, user]);
 
   return (
     <ChakraProvider theme={theme}>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-      {isLoading ? <LoadingSpinner /> : <Router />}
+      {isLoading && !user ? <LoadingSpinner /> : <Router />}
     </ChakraProvider>
   );
 }

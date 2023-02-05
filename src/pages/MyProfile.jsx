@@ -2,6 +2,7 @@ import {
   Avatar,
   Box,
   Button,
+  Divider,
   Flex,
   Text,
   useColorModeValue,
@@ -9,6 +10,7 @@ import {
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import Posts from "../components/Home/Posts";
+import LargeLoadingSpinner from "../components/Loading/Large";
 import { useStateValue } from "../context/StateProvider";
 
 const MyProfile = () => {
@@ -18,6 +20,8 @@ const MyProfile = () => {
   useEffect(() => {
     setUserPosts(posts?.filter((post) => post.uid == user.uid));
   }, [posts]);
+
+  if (!user) return <LargeLoadingSpinner />;
 
   return (
     <Box align="center" flex="1">
@@ -50,6 +54,15 @@ const MyProfile = () => {
           >
             Edit Profile
           </Button>
+        </Flex>
+        <Divider my="4" />
+        <Flex alignItems="center" justify="space-around" gap="8">
+          <Box bg="facebook.500" px="5" py="2" rounded="lg" flex="1">
+            Posts: {userPosts?.length}
+          </Box>
+          <Box bg="facebook.500" px="5" py="2" rounded="lg" flex="1">
+            Followers: {user?.followers ? user?.followers.length : 0}
+          </Box>
         </Flex>
       </Box>
       {/* <Box px="4" mt="10"> */}

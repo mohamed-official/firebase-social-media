@@ -4,7 +4,7 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import { useSignOut } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
@@ -24,11 +24,17 @@ export function useLogin() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password).then(
-        (userCredential) => {
+        async (userCredential) => {
+          // Get user followers
+          const userDocRef = doc(db, "users", userCredential.user.uid);
+          const docSnap = await getDoc(userDocRef);
           // Save user to context
           dispatch({
             type: actionTypes.SET_USER,
-            user: userCredential.user,
+            user: {
+              ...userCredential.user,
+              followers: docSnap.data().followers,
+            },
           });
           localStorage.setItem("user", JSON.stringify(userCredential.user));
           // Redirect to home page
@@ -90,9 +96,9 @@ export function useRegister() {
     } else {
       try {
         await createUserWithEmailAndPassword(auth, email, password).then(
-          (userCredential) => {
+          async (userCredential) => {
             // Update username
-            updateProfile(userCredential?.user, {
+            await updateProfile(userCredential?.user, {
               displayName: username,
             });
             // Create user doc in firestore
@@ -101,6 +107,7 @@ export function useRegister() {
               username: username,
               avatar: "",
               createdAt: Date.now(),
+              followers: [],
             });
             // Save user to context
             dispatch({
